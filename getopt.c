@@ -194,17 +194,7 @@ static int parse_tcp_opt(int ac, char *av[], struct opts *optsp)
 			if (!av[FIRST_ARG_INDEX + 1])
 				print_usage(NULL, HELP_STR_TCP, 1);
 
-			optsp->port = strtol(av[FIRST_ARG_INDEX + 1], &endptr, 10);
-
-			if ((errno == ERANGE &&
-						(optsp->port == LONG_MAX || optsp->port == LONG_MIN)) ||
-					(errno != 0 && optsp->port == 0)) {
-			}
-
-			if (endptr == av[FIRST_ARG_INDEX + 1]) {
-				//FIXME err_msg("No digits were found\n");
-				exit(EXIT_FAILOPT);
-			}
+			optsp->port = xstrdup(av[FIRST_ARG_INDEX + 1]);
 
 			av += 2; ac -= 2;
 			continue;
@@ -223,7 +213,10 @@ static int parse_tcp_opt(int ac, char *av[], struct opts *optsp)
 				print_usage("tcp transmit mode required file and destination address\n",
 						HELP_STR_TCP, 1);
 
+			/* the data source */
 			optsp->infile = xstrdup(av[0]);
+
+			/* the destination address */
 			optsp->hostname = xstrdup(av[1]);
 
 			break;
