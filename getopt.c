@@ -165,7 +165,7 @@ static int parse_tcp_opt(int ac, char *av[], struct opts *optsp)
 		/* -c congestion control algorithm */
 		if ((!strcmp(&av[FIRST_ARG_INDEX][1], "c")) ) {
 
-			if (!av[2])
+			if (!av[FIRST_ARG_INDEX + 1])
 				print_usage(NULL, HELP_STR_TCP, 1);
 
 			for (i = 0; i <= CA_MAX; i++ ) {
@@ -181,6 +181,30 @@ static int parse_tcp_opt(int ac, char *av[], struct opts *optsp)
 
 			if (!optsp->change_congestion) /* option error */
 				print_usage(NULL, HELP_STR_TCP, 1);
+
+			av += 2; ac -= 2;
+			continue;
+		}
+
+
+		/* -p port */
+		if ((!strcmp(&av[FIRST_ARG_INDEX][1], "p")) ) {
+			char *endptr;
+
+			if (!av[FIRST_ARG_INDEX + 1])
+				print_usage(NULL, HELP_STR_TCP, 1);
+
+			optsp->port = strtol(av[FIRST_ARG_INDEX + 1], &endptr, 10);
+
+			if ((errno == ERANGE &&
+						(optsp->port == LONG_MAX || optsp->port == LONG_MIN)) ||
+					(errno != 0 && optsp->port == 0)) {
+			}
+
+			if (endptr == av[FIRST_ARG_INDEX + 1]) {
+				//FIXME err_msg("No digits were found\n");
+				exit(EXIT_FAILOPT);
+			}
 
 			av += 2; ac -= 2;
 			continue;
