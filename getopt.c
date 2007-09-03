@@ -195,6 +195,7 @@ static int parse_tcp_opt(int ac, char *av[], struct opts *optsp)
 				print_usage(NULL, HELP_STR_TCP, 1);
 
 			optsp->port = xstrdup(av[FIRST_ARG_INDEX + 1]);
+			/* FIXME: add some sanity checks here */
 
 			av += 2; ac -= 2;
 			continue;
@@ -626,8 +627,8 @@ parse_opts(int ac, char *av[], struct opts *optsp)
 			continue;
 		}
 
-		/* -N nice-level */
-		if ((!strcmp(&av[FIRST_ARG_INDEX][1], "N")) ) {
+		/* -r round-trip-time  */
+		if ((!strcmp(&av[FIRST_ARG_INDEX][1], "r")) ) {
 			char *endptr;
 
 			if (!av[FIRST_ARG_INDEX + 1]) {
